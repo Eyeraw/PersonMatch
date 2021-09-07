@@ -1,10 +1,27 @@
-function MatchInFactor (oInput,sThreshold, oOutputPS){
+// **********
+// Описание: Поиск клиента в Факторе.
+// ДИ с УСБС GR 6.4.11 ReqId 925
+// Автор(ы): Пережогин Илья
+// Компания: Техносерв Консалтинг
+// Дата: 03/09/2021 
+// **********
+function MatchInFactor (oInput,sThreshold, psMapOut){
 	try{
 		var oInputPS = TheApplication().NewPropertySet(),
 			oAdapterPS = TheApplication().NewPropertySet(),
 			oMatchValuesPS = TheApplication().NewPropertySet(),
 			oOutputPS = TheApplication().NewPropertySet(),
+			psAdapterIn = TheApplication().NewPropertySet(),
+			psAdapterOut = TheApplication().NewPropertySet(),
 			oDeDupBS = TheApplication().GetService("DeDuplication"), // Сервис поиска
+			svcAdapter = TheApplication().GetService("EAI Siebel Adapter"),
+			svcPRM = TheApplication().GetService("PRM ANI Utility Service"),
+			svcTransform = TheApplication().GetService("EAI Data Transformation Engine"),
+			psMapIn = TheApplication().NewPropertySet(),
+			psMapOut = TheApplication().NewPropertySet(),
+			psPRMIn = TheApplication().NewPropertySet(),
+			psPRMOut = TheApplication().NewPropertySet(),
+			psContact = TheApplication().NewPropertySet();
 			
 		oInputPS.SetType("General Settings");
 		oInputPS.SetProperty("BC Name", "Contact");	
@@ -17,6 +34,30 @@ function MatchInFactor (oInput,sThreshold, oOutputPS){
 		oInputPS.AddChild(oAdapterPS);
 		oInputPS.AddChild(oMatchValuesPS);
 		oDeDupBS.InvokeMethod("Value Match", oInputPS, oOutputPS);
+		//Составление SiebelMessage
+		psPRMIn.SetPropperty("Hierarchy Name", "MDM Contact Filtr Magnit System IO")
+		svcPRM.InvokeMethod("CreateEmptyPropSet",psPRMIn,psPRMOut);
+		psContact.SetType("Contact");
+		for(var i = 0; i < oOutputPS.GetChildCount(); i++) {
+			psPRMOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Id", oOutputPS.GetChild(i).GetProperty("Matchee Row Id"));
+			psPRMOut.GetChild(0).GetChild(0).AddChild(psContact);
+		}
+		//EAI Siebel Adapter "Query"
+		psAdapterIn.SetProperty("SiebelMessage",psPRMOut);
+		psAdapterIn.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
+		svcAdapter.InvokeMethod("Query",psAdapterIn,psAdapterOut);
+		//Data Transformation Engine: фильтрация записей
+		psMapIn.SetProperty("MapName","MDM Filter Magnit");
+		psMapIn.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
+		psMapIn.AddChild(psAdapterOut.GetChild(0));
+		svcTransform.InvokeMethod("Execute",psMapIn,psMapOut);
+		//Составление PropSet из Id и Score
+		for (var i = 0; i < psMapOut.GetChild(0).GetChild(0).GetChildCount(); i++) {
+			for (var j = 0; j < oOutputPS.GetChildCount(); j++) {
+				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psMapOut.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id")) 
+					psMapOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
+			}
+		}
 	}
 	finally {
 
