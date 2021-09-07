@@ -23,6 +23,7 @@ function MatchInFactor (oInput,sThreshold, psMapOut){
 			psPRMOut = TheApplication().NewPropertySet(),
 			psContact = TheApplication().NewPropertySet();
 			
+			
 		oInputPS.SetType("General Settings");
 		oInputPS.SetProperty("BC Name", "Contact");	
 		oAdapterPS.SetType("Adapter Settings");
@@ -35,13 +36,15 @@ function MatchInFactor (oInput,sThreshold, psMapOut){
 		oInputPS.AddChild(oMatchValuesPS);
 		oDeDupBS.InvokeMethod("Value Match", oInputPS, oOutputPS);
 		//Составление SiebelMessage
-		psPRMIn.SetPropperty("Hierarchy Name", "MDM Contact Filtr Magnit System IO")
+		psPRMIn.SetProperty("Hierarchy Name", "MDM Contact Filtr Magnit System IO");
 		svcPRM.InvokeMethod("CreateEmptyPropSet",psPRMIn,psPRMOut);
-		psContact.SetType("Contact");
+		psContact = psPRMOut.GetChild(0).GetChild(0).GetChild(0);
+		psPRMOut.GetChild(0).GetChild(0).RemoveChild(0);
 		for(var i = 0; i < oOutputPS.GetChildCount(); i++) {
-			psPRMOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Id", oOutputPS.GetChild(i).GetProperty("Matchee Row Id"));
+			psContact.SetProperty("Id", oOutputPS.GetChild(i).GetProperty("Matchee Row Id"));
 			psPRMOut.GetChild(0).GetChild(0).AddChild(psContact);
 		}
+
 		//EAI Siebel Adapter "Query"
 		psAdapterIn.SetProperty("SiebelMessage",psPRMOut);
 		psAdapterIn.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
