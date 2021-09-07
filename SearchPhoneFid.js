@@ -11,7 +11,7 @@ function SearchPhoneFid(sPhone){
 		sPerId = "";
 	try {
 		with(TheApplication().GetBusObject("MDM Verified Phone Duplicate").GetBusComp("Alternate Phone")){
-			SetSearchExpr("[Address] = '" + sPhone + "' AND ([Effective End Date] > '" + InvokeMethod("EvalExpr", "Today()") + "' OR [Effective End Date] IS NULL)");
+			SetSearchExpr("[Address] = '" + sPhone + "' AND [MDM Match Skip Flag] = 'N' AND ([Effective End Date] > '" + InvokeMethod("EvalExpr", "Today()") + "' OR [Effective End Date] IS NULL)");
 			ExecuteQuery(ForwardOnly);
 			if(FirstRecord()){
 				do {
