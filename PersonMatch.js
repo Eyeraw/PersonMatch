@@ -17,14 +17,11 @@ function PersonMatch (Inputs, Outputs)
 			oLogBS = app.GetService("MDM Online Log Service"),	
 			oDQMBS = app.GetService("UCM Data Quality Manager"), // Данный BS нужен для получения значения UP "Contact Manual Threshold", если в сообщении Threshold пуст.
 			oEAITransformBS = app.GetService("EAI Data Transformation Engine"),
-			oDeDupBS = TheApplication().GetService("DeDuplication"), // Сервис поиска
 			oEAISiebelAdapterBS = app.GetService("EAI Siebel Adapter"), 
 			oInputPS = app.NewPropertySet(),
 			oOutputPS = app.NewPropertySet(),
 			oInput2PS = app.NewPropertySet(),
 			oOutput2PS = app.NewPropertySet(),
-			oAdapterPS = app.NewPropertySet(),
-			oMatchValuesPS = app.NewPropertySet(),
 			oFindedMatchPS = app.NewPropertySet(), // Для хранения пар Id:Score найденных контактов
 			oInputSiebelMessagePS = app.NewPropertySet(),
 			oOutputSiebelMessagePS = app.NewPropertySet(),
@@ -100,17 +97,7 @@ function PersonMatch (Inputs, Outputs)
 					}
 					else{
 						if(inFactor == true){ //VTB24DPR3-83 проверка только в факторе
-							oInputPS.SetType("General Settings");
-							oInputPS.SetProperty("BC Name", "Contact");			
-							oAdapterPS.SetType("Adapter Settings");
-							oAdapterPS.SetProperty("Search Level", "Narrow");
-							oAdapterPS.SetProperty("Population", "Default");
-							oAdapterPS.SetProperty("Threshold", sThreshold);			
-							//OBAYDA CR685 Параметры поиска
-							SetSearchParam(oContactPs,oMatchValuesPS);			
-							oInputPS.AddChild(oAdapterPS);
-							oInputPS.AddChild(oMatchValuesPS);
-							oDeDupBS.InvokeMethod("Value Match", oInputPS, oOutputPS);			
+							MatchInFactor(oContactPs, sThreshold, oOutputPS);
 							iCount = oOutputPS.GetChildCount();
 							inSiebelMatch = false;
 						}
@@ -122,16 +109,7 @@ function PersonMatch (Inputs, Outputs)
 							sSearchExp2 = oOutputFuncPs.GetProperty("sSearchExp2");
 							if(iCount == 0){
 								inSiebelMatch = false;
-								oInputPS.SetType("General Settings");
-								oInputPS.SetProperty("BC Name", "Contact");			
-								oAdapterPS.SetType("Adapter Settings");
-								oAdapterPS.SetProperty("Search Level", "Narrow");
-								oAdapterPS.SetProperty("Population", "Default");
-								oAdapterPS.SetProperty("Threshold", sThreshold);			
-								SetSearchParam(oContactPs,oMatchValuesPS);							
-								oInputPS.AddChild(oAdapterPS);
-								oInputPS.AddChild(oMatchValuesPS);
-								oDeDupBS.InvokeMethod("Value Match", oInputPS, oOutputPS);			
+								MatchInFactor(oContactPs, sThreshold, oOutputPS);
 								iCount = oOutputPS.GetChildCount();
 							}
 						}

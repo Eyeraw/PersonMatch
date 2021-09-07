@@ -1,0 +1,24 @@
+function MatchInFactor (oInput,sThreshold, oOutputPS){
+	try{
+		var oInputPS = TheApplication().NewPropertySet(),
+			oAdapterPS = TheApplication().NewPropertySet(),
+			oMatchValuesPS = TheApplication().NewPropertySet(),
+			oOutputPS = TheApplication().NewPropertySet(),
+			oDeDupBS = TheApplication().GetService("DeDuplication"), // Сервис поиска
+			
+		oInputPS.SetType("General Settings");
+		oInputPS.SetProperty("BC Name", "Contact");	
+		oAdapterPS.SetType("Adapter Settings");
+		oAdapterPS.SetProperty("Search Level", "Narrow");
+		oAdapterPS.SetProperty("Population", "Default");
+		oAdapterPS.SetProperty("Threshold", sThreshold);
+		//OBAYDA CR685 Параметры поиска
+		SetSearchParam(oInput,oMatchValuesPS);
+		oInputPS.AddChild(oAdapterPS);
+		oInputPS.AddChild(oMatchValuesPS);
+		oDeDupBS.InvokeMethod("Value Match", oInputPS, oOutputPS);
+	}
+	finally {
+
+	}
+}
