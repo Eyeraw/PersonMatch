@@ -38,7 +38,7 @@ function MatchInSiebelPhone(Inputs:PropertySet, sThreshold:String, Outputs:Prope
 			InvokeMethod("SetAdminMode","TRUE");
 			ActivateField("Person Id");
 			ClearToQuery();
-			SetSearchExpr("[Address] = '" + Inputs.GetProperty("MDM DQ FullPhone") + "' AND [Medium Type] = 'Phone' AND ([Effective End Date] > '" + sNow + "' OR [Effective End Date] IS NULL)"); //##DAVRAMENKO 06.07.2020 Поиск по номеру телефона с условием того что дата окончания должна быть больше текущей или пустой.
+			SetSearchExpr("[Address] = '" + Inputs.GetProperty("MDM DQ FullPhone") + "' AND [MDM Match Skip Flag] = 'N' AND [Medium Type] = 'Phone' AND ([Effective End Date] > '" + sNow + "' OR [Effective End Date] IS NULL)"); //##DAVRAMENKO 06.07.2020 Поиск по номеру телефона с условием того что дата окончания должна быть больше текущей или пустой.
 			ExecuteQuery(ForwardOnly);                
 			iNum = CountRecords();
 			isRecord = FirstRecord();

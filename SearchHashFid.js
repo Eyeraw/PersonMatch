@@ -13,7 +13,7 @@ function SearchHashFid(sHash,docType){
 	try
 	{
 		with(TheApplication().GetBusObject("PUB Immigration Credentials").GetBusComp("PUB Contact Credential")){
-				SetSearchExpr("[MDM Hash] = '" + sHash + "' AND [Category] = '" + docType + "'");
+            SetSearchExpr("[MDM Hash] = '" + sHash + "' AND [Category] = '" + docType + "' AND [MDM Match Skip Flag] = 'N'");
 			ExecuteQuery(ForwardOnly); 
 			if(FirstRecord()){
 				do {

@@ -32,14 +32,14 @@ function MatchInSiebelINN(Inputs:PropertySet, sThreshold:String, Outputs:Propert
 			ClearToQuery();
 			if (sSearchType == "all")
 			{
-				SetSearchSpec("MDM INN",Inputs.GetProperty("MDM INN"));
+				SetSearchExpr("[MDM INN] = '" + Inputs.GetProperty("MDM INN") + "' AND [MDM Match Skip Flag] = 'N'");
 			}
 			else
 			{
 				//cust
-				SetSearchExpr("[MDM INN] = '" + Inputs.GetProperty("MDM INN") + "' AND [Type] <> '3'");
+				SetSearchExpr("[MDM INN] = '" + Inputs.GetProperty("MDM INN") + "' AND [Type] <> '3' AND [MDM Match Skip Flag] = 'N'");
 			}
-			ExecuteQuery(ForwardOnly);                
+			ExecuteQuery(ForwardOnly);
 			iNum = CountRecords();
 			isRecord = FirstRecord();
 			oFindedPS.SetType("FindedMatch");

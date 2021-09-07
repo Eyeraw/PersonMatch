@@ -11,7 +11,7 @@ function SearchINNFid(sINN){
 		sPerId = "";
 	try {
 		with(TheApplication().GetBusObject("Contact").GetBusComp("Contact")){
-			SetSearchExpr("[MDM INN] = '" + sINN + "'");
+			SetSearchExpr("[MDM INN] = '" + sINN + "' AND [MDM Match Skip Flag] = 'N'");
 			ExecuteQuery(ForwardOnly);
 			if(FirstRecord()){
 				do {
