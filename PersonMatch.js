@@ -126,8 +126,8 @@ function PersonMatch (Inputs, Outputs)
 				for(var i = 0; i < iCount; i++){
 					// Добавляем пару Id:Score в property set для удобства переноса Match Score в выходной IO
 					sTemp = "";
-					oFindedMatchPS.SetProperty(oOutputPS.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"), oOutputPS.GetChild(0).GetChild(0).GetChild(i).GetProperty("Score"));
-					sTemp = "[Contact.Id]='" + oOutputPS.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id") + "'";				
+					oFindedMatchPS.SetProperty(oOutputPS.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"), oOutputPS.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetProperty("Score"));
+					sTemp = "[Contact.Id]='" + oOutputPS.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetProperty("Id") + "'";
 					// Если длина Search Expression > 2000 символов
 					// то добавляем данный Id
 					if(sSearchExp1.length + sTemp.length + 4 < 2000){
