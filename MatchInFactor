@@ -16,18 +16,16 @@ function MatchInFactor (oInput,sThreshold, psMapOut){
 			svcAdapter = TheApplication().GetService("EAI Siebel Adapter"),
 			svcPRM = TheApplication().GetService("PRM ANI Utility Service"),
 			svcTransform = TheApplication().GetService("EAI Data Transformation Engine"),
-			psMapIn = TheApplication().NewPropertySet(),
-			psMapOut = TheApplication().NewPropertySet(),
 			psPRMIn = TheApplication().NewPropertySet(),
 			psPRMOut = TheApplication().NewPropertySet(),
 			psContact = TheApplication().NewPropertySet();
+		//Реализация поиска в факторе
 		oInputPS.SetType("General Settings");
 		oInputPS.SetProperty("BC Name", "Contact");	
 		oAdapterPS.SetType("Adapter Settings");
 		oAdapterPS.SetProperty("Search Level", "Narrow");
 		oAdapterPS.SetProperty("Population", "Default");
 		oAdapterPS.SetProperty("Threshold", sThreshold);
-		//OBAYDA CR685 Параметры поиска
 		SetSearchParam(oInput,oMatchValuesPS);
 		oInputPS.AddChild(oAdapterPS);
 		oInputPS.AddChild(oMatchValuesPS);
@@ -45,15 +43,14 @@ function MatchInFactor (oInput,sThreshold, psMapOut){
 		//EAI Siebel Adapter "Query"
 		svcAdapter.InvokeMethod("Query",psPRMOut,psAdapterOut);
 		//Data Transformation Engine: фильтрация записей
-		psMapIn.SetProperty("MapName","MDM Filter Magnit");
-		psMapIn.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
-		psMapIn.AddChild(psAdapterOut.GetChild(0));
-		svcTransform.InvokeMethod("Execute",psMapIn,psMapOut);
+		psAdapterOut.SetProperty("MapName","MDM Filter Magnit");
+		psAdapterOut.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
+		svcTransform.InvokeMethod("Execute",psAdapterOut,psMapOut);
 		//Составление PropSet из Id и Score
 		for (var i = 0; i < psMapOut.GetChild(0).GetChild(0).GetChildCount(); i++) {
 			for (var j = 0; j < oOutputPS.GetChildCount(); j++) {
-				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psMapOut.GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"))
-					psMapOut.GetChild(0).GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
+				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psMapOut.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"))
+					psMapOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
 			}
 		}
 	}
