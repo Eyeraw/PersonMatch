@@ -44,7 +44,7 @@ function MatchInFactor (oInput,sThreshold, psAdapterOut){
 		for (var i = 0; i < psAdapterOut.GetChild(0).GetChild(0).GetChildCount(); i++) {
 			for (var j = 0; j < oOutputPS.GetChildCount(); j++) {
 				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psAdapterOut.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"))
-				psAdapterOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
+				psAdapterOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score", oOutputPS.GetChild(j).GetProperty("Score"));
 			}
 		}
 	}
