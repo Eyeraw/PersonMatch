@@ -5,17 +5,15 @@
 // Компания: Техносерв Консалтинг
 // Дата: 03/09/2021 
 // **********
-function MatchInFactor (oInput,sThreshold, psMapOut){
+function MatchInFactor (oInput,sThreshold, psAdapterOut){
 	try{
 		var oInputPS = TheApplication().NewPropertySet(),
 			oAdapterPS = TheApplication().NewPropertySet(),
 			oMatchValuesPS = TheApplication().NewPropertySet(),
 			oOutputPS = TheApplication().NewPropertySet(),
-			psAdapterOut = TheApplication().NewPropertySet(),
 			oDeDupBS = TheApplication().GetService("DeDuplication"), // Сервис поиска
 			svcAdapter = TheApplication().GetService("EAI Siebel Adapter"),
 			svcPRM = TheApplication().GetService("PRM ANI Utility Service"),
-			svcTransform = TheApplication().GetService("EAI Data Transformation Engine"),
 			psPRMIn = TheApplication().NewPropertySet(),
 			psPRMOut = TheApplication().NewPropertySet(),
 			psContact = TheApplication().NewPropertySet();
@@ -37,20 +35,16 @@ function MatchInFactor (oInput,sThreshold, psMapOut){
 		psPRMOut.GetChild(0).GetChild(0).RemoveChild(0);
 		for(var i = 0; i < oOutputPS.GetChildCount(); i++) {
 			psPRMOut.GetChild(0).GetChild(0).AddChild(psContact.Copy());
-			psContact.SetProperty("Id", oOutputPS.GetChild(i).GetProperty("Matchee Row Id"));
-			psPRMOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("MDM Match Skip Flag", "*");
+			psPRMOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Id",  oOutputPS.GetChild(i).GetProperty("Matchee Row Id"));
+			psPRMOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("MDM Match Skip Flag", "N");
 		}
 		//EAI Siebel Adapter "Query"
 		svcAdapter.InvokeMethod("Query",psPRMOut,psAdapterOut);
-		//Data Transformation Engine: фильтрация записей
-		psAdapterOut.SetProperty("MapName","MDM Filter Magnit");
-		psAdapterOut.SetProperty("OutputIntObjectName","MDM Contact Filtr Magnit System IO");
-		svcTransform.InvokeMethod("Execute",psAdapterOut,psMapOut);
 		//Составление PropSet из Id и Score
-		for (var i = 0; i < psMapOut.GetChild(0).GetChild(0).GetChildCount(); i++) {
+		for (var i = 0; i < psAdapterOut.GetChild(0).GetChild(0).GetChildCount(); i++) {
 			for (var j = 0; j < oOutputPS.GetChildCount(); j++) {
-				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psMapOut.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"))
-					psMapOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
+				if (oOutputPS.GetChild(i).GetProperty("Matchee Row Id") == psAdapterOut.GetChild(0).GetChild(0).GetChild(i).GetProperty("Id"))
+				psAdapterOut.GetChild(0).GetChild(0).GetChild(i).SetProperty("Score") = oOutputPS.GetChild(j).GetProperty("Score");
 			}
 		}
 	}
