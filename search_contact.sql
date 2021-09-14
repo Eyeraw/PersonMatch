@@ -22,6 +22,7 @@ AS
        AND nvl(p_dul_num,'0') <> '0' -- svv
        AND TRUNC(con.birth_dt) = TRUNC(p_birth_dt)
        AND NVL(con.con_cd,'1') <> 3
+       AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
        AND p_threshold  <= 99
        AND con.priv_flg = 'N' -- svv
        AND con.emp_flg = 'N'  -- svv
@@ -47,6 +48,7 @@ AS
                AND TRUNC(con.birth_dt) = TRUNC(p_birth_dt)
                AND NVL(con.con_cd,'1') <> 3
                AND p_threshold  <= 99
+               AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
                AND con.PRIV_FLG = 'N' -- svv
                AND con.EMP_FLG = 'N'  -- svv
                AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -62,6 +64,7 @@ AS
                AND TRUNC(con.birth_dt) = TRUNC(p_birth_dt)
                AND NVL(con.con_cd,'1') <> 3
                AND p_threshold  <= 80
+               AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
                AND con.PRIV_FLG = 'N' -- svv
                AND con.EMP_FLG = 'N'  -- svv
                AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -86,6 +89,7 @@ AS
                 OR TRUNC(con.birth_dt) = TRUNC(p_birth_dt))
                AND NVL(con.con_cd,'1') <> 3
                AND p_threshold  <= 79
+               AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
                AND con.PRIV_FLG = 'N' -- svv
                AND con.EMP_FLG = 'N'  -- svv
                AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -102,6 +106,7 @@ AS
                 OR replace(NLS_UPPER(con.mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е') = replace(NLS_UPPER(p_mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е'))
                AND NVL(con.con_cd,'1') <> 3
                AND p_threshold  <= 78
+               AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
                AND con.PRIV_FLG = 'N' -- svv
                AND con.EMP_FLG = 'N'  -- svv
                AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -117,6 +122,7 @@ AS
                 OR replace(NLS_UPPER(con.mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е') = replace(NLS_UPPER(p_mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е'))
                AND NVL(con.con_cd,'1') <> 3
                AND p_threshold  <= 78
+               AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
                AND con.PRIV_FLG = 'N' -- svv
                AND con.EMP_FLG = 'N'  -- svv
                AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -142,6 +148,7 @@ AS
              AND nvl(p_dul_num,'0') <> '0' -- svv
              AND TRUNC(con.birth_dt) = TRUNC(p_birth_dt)
              AND p_threshold  <= 99
+             AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
              AND con.PRIV_FLG = 'N' -- svv
              AND con.EMP_FLG = 'N'  -- svv
              AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -156,6 +163,7 @@ AS
               OR replace(NLS_UPPER(con.mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е') = replace(NLS_UPPER(p_mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е'))
              AND TRUNC(con.birth_dt) = TRUNC(p_birth_dt)
              AND p_threshold  <= 80
+             AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
              AND con.PRIV_FLG = 'N' -- svv
              AND con.EMP_FLG = 'N'  -- svv
              AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -179,6 +187,7 @@ AS
               OR p_birth_dt IS NULL
               OR TRUNC(con.birth_dt) = TRUNC(p_birth_dt))
              AND p_threshold  <= 79
+             AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
              AND con.PRIV_FLG = 'N' -- svv
              AND con.EMP_FLG = 'N'  -- svv
              AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -194,6 +203,7 @@ AS
                 OR p_mid_name IS NULL
                 OR replace(NLS_UPPER(con.mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е') = replace(NLS_UPPER(p_mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е'))
              AND p_threshold  <= 78
+             AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
              AND con.PRIV_FLG = 'N' -- svv
              AND con.EMP_FLG = 'N'  -- svv
              AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
@@ -210,6 +220,7 @@ AS
               OR replace(NLS_UPPER(con.mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е') = replace(NLS_UPPER(p_mid_name,'nls_sort=''GENERIC_BASELETTER'''),'Ё','Е'))
 --             AND NVL(con.con_cd,'1') <> 3
              AND p_threshold  <= 78
+             AND con.X_MATCH_SKIP_FLG = 'N' --##IPEREZHOGIN 20210914 MagnitPay
              AND con.PRIV_FLG = 'N' -- svv
              AND con.EMP_FLG = 'N'  -- svv
              AND nvl(con.x_terminated_flg, 'N') <> 'Y' --##DKORKMASOV BR-15711 Заблокированные ФЛ не участвуют в поиске
